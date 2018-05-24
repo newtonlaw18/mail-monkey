@@ -41,7 +41,6 @@
       <div class="container">
         <div class="row text-center">
           <div class="col-md-12">
-            <button type="button" id="new-list-btn" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Create New List</button>
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -51,20 +50,35 @@
                   <th scope="col">Action</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td><button type="button" id="new-list-btn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add email to list</button>
-                  <button type="button" id="new-list-btn" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Delete</button></td>
-                </tr>
+              <tbody>       
+                  <?php 
+                    $lists = get_all_lists(); 
+                    // $names = get_all_list_names();
+                    for($i = 0; $i<$lists['total'];$i++){
+                      echo '
+                      <tr>
+                        <th scope="row">'.($i+1).'</th>
+                        <td>'.$lists['list_info'][$i]->name.'</td>
+                        <td>'.$lists['list_info'][$i]->date_created.'</td>
+                        <input type="hidden" name="list_id" value="'.$lists['list_info'][$i]->id.'">
+                        <td>
+                          <button type="button" id="new-list-btn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addEmailToList" data-whatever="@mdo">Add email to list
+                          </button>
+                          <button type="button" id="new-list-btn" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Delete
+                          </button>
+                        </td>
+                      </tr>';
+                    }
+                  ?>
               </tbody>
             </table>
+            <br><br>
+            <button type="button" id="new-list-btn" class="btn btn-danger" data-toggle="modal" data-target="#createNewList" data-whatever="@mdo">Create New List</button>
           </div>
         </div>
           
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <form action="mailchimp.php" method="post">
+          <div class="modal fade" id="createNewList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -77,7 +91,7 @@
                     <form>
                       <div class="form-group">
                         <label for="recipient-name" class="col-form-label">List Name:</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <input type="text" class="form-control" id="list_name" name="list_name">
                       </div>
                       <div class="form-group">
                         <label for="message-text" class="col-form-label">Message:</label>
@@ -87,7 +101,37 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Create</button>
+                    <input type="submit" name="submit" class="btn btn-primary">
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+
+            <div class="modal fade" id="addEmailToList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Email to List</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">List Name:</label>
+                        <input type="text" class="form-control" id="list_name" name="list_name">
+                      </div>
+                      <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="submit" class="btn btn-primary">
                   </div>
                 </div>
               </div>
@@ -102,16 +146,16 @@
 
       <script type="text/javascript">
         
-        var request = new XMLHttpRequest();
-        request.open("POST", "mailchimp.php", true);
-        request.responseType = 'json';
-        request.onload  = function() {
-           var jsonResponse = request.response;
-           // alert('hell');
-          };
-        request.send();
-        console.log(request.status);
-        console.log(request.statusText);
+        // var request = new XMLHttpRequest();
+        // request.open("POST", "mailchimp.php", true);
+        // request.responseType = 'json';
+        // request.onload  = function() {
+        //    var jsonResponse = request.response;
+        //    // alert('hell');
+        //   };
+        // request.send();
+        // console.log(request.status);
+        // console.log(request.statusText);
       </script>
     </body>
 </html>

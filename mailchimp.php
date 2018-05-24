@@ -2,31 +2,10 @@
 	$api_key = 'bf3af2ba2c9b444970a3b8bfe9daf6b5-us18';
 	$url = 'https://us18.api.mailchimp.com/3.0/lists';
 
-	if (is_ajax()) {
-	  if (isset($_POST["action"]) && !empty($_POST["action"])) { //Checks if action value exists
-	    $action = $_POST["action"];
-	    switch($action) { //Switch case for value of action
-	      case "test": get_all_lists(); break;
-	    }
-	  }
-	}
-
-	//Function to check if the request is an AJAX request
-	function is_ajax() {
-	  return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-	}
-
-	function test_function(){
-	  $return = $_POST;
-	  
-	  //Do what you need to do with the info. The following are some examples.
-	  //if ($return["favorite_beverage"] == ""){
-	  //  $return["favorite_beverage"] = "Coke";
-	  //}
-	  //$return["favorite_restaurant"] = "McDonald's";
-	  
-	  $return["json"] = json_encode($return);
-	  echo json_encode($return);
+	if($_POST["list_name"]){
+		echo $_POST["list_name"];
+		$list_name = $_POST["list_name"];
+		create_new_list($list_name);
 	}
 
 	function connect_to_mailchimp_api( $url, $request_type, $api_key, $data = array() ) {
@@ -54,88 +33,11 @@
 		return curl_exec($mch);
 	}
 
-	// function create_new_list(){
-	// 	$data = array
-	// 	connect_to_mailchimp_api($url, 'POST', $api_key, $data);
-	// }
- 
-	// Query String Perameters are here
-	// for more reference please vizit http://developer.mailchimp.com/documentation/mailchimp/reference/lists/
-	// $data = array(
-	// 	// 'fields' => 'lists', // total_items, _links
-	// 	// //'email' => 'misha@rudrastyh.com',
-	// 	// 'count' => 5, // the number of lists to return, default - all
-	// 	// 'before_date_created' => '2016-01-01 10:30:50', // only lists created before this date
-	// 	// 'after_date_created' => '2014-02-05' // only lists created after this date
-	// 	'name' => 'Ematic',
-	// 	'contact' = array(
-	// 		'company' => "MailChimp", 
-	// 		'address1' => "675 Ponce De Leon Ave NE",
- //            'address2' => "Suite 5000",
- //            'city' => "zip",
- //            'state' => "GA",
- //            'zip' => "30308",
- //            'country' => "US",
- //            'phone' => ""
-	// 		),
-	// 	'permission_reminder' => "You'\''re receiving this email because you signed up for updates about Freddie'\''s newest hats.",
-	// 	'campaign_defaults' = array(
-	// 		'from_name' => "Freddie", 
-	// 		'from_email' => "freddie@freddiehats.com", 
-	// 		'subject' => "MailChimp Demo", 
-	// 		'language' => "en"
-	// 		),
-	// 	'email_type_option' => 'true'
-	// );
-
-	// $data = array(
-	// 	'name' => 'Ematic',
-	// 	'contact' => array(
-	// 		'company' => 'Mailchimp', 
-	// 		'address1' => '675 Ponce De Leon Ave NE',
- //            'address2' => 'Suite 5000',
- //            'city' => 'zip',
- //            'state' => 'GA',
- //            'zip' => '30308',
- //            'country' => 'US',
- //            'phone' => ''
-	// 	),
-	// 	'permission_reminder' => 'Hello world',
-	// 	'email_type_option' => true,
-	// 	'campaign_defaults' => array(
-	// 		'from_name' => 'Freddie', 
-	// 		'from_email' => 'freddie@freddiehats.com', 
-	// 		'subject' => 'MailChimp Demo', 
-	// 		'language' => 'en'
-	// 	)
-	// );
-
-	// $data = '{
-	// 	"name" : "Ematic",
-	// 	"contact" : {
-	// 		"company" : "Mailchimp",
-	// 		"address1" : "675 Ponce De Leon Ave NE",
- //            "address2" : "Suite 5000",
- //            "city" : "zip",
- //            "state" : "GA",
- //            "zip" : "30308",
- //            "country" : "US",
- //            "phone" : ""
-	// 	},
-	// 	"permission_reminder" : "Hello world",
-	// 	"campaign_defaults" : {
-	// 		"from_name" : "Freddie", 
-	// 		"from_email" : "freddie@freddiehats.com", 
-	// 		"subject" : "MailChimp Demo", 
-	// 		"language" : "en"
-	// 	},
-	// 	"email_type_option" : true
-	// }';
-
-	function create_new_list(){
+	function create_new_list($list_name){
 		global $url, $api_key;
+		$list_name = $list_name;
 		$data = array(
-			'name' => 'Ematic',
+			'name' => $list_name,
 			'contact' => array(
 				'company' => 'Mailchimp', 
 				'address1' => '675 Ponce De Leon Ave NE',
@@ -156,28 +58,90 @@
 			)
 		);
 		$result = json_decode(connect_to_mailchimp_api($url, 'POST', $api_key, $data));
-		echo "hello";
-		print_r( $result->errors);
-		echo "1";
-		print($result->id);
-		echo "2";
+		// echo "hello";
+		// print_r( $result->errors);
+		// echo "1";
+		// print($result->id);
+		// echo "2";
 
+		//redirect back to lists page after creating a new list
+		add_self_email_to_list($result->id);
 	}
+
+	function add_self_email_to_list($list_id){
+		global $url, $api_key;
+		$list_id = $list_id;
+		$url = $url . "/" . $list_id;
+		$self_email = 'newtonlaw18@outlook.com';
+
+		$data = array(
+			// 'list_id' => $list_id,
+			'members' => array (
+			    0 => array(
+			       'email_address' => 'newtonlaw18@outlook.com',
+			       'status' => 'subscribed',
+			    )//,
+			    // 1 => array(
+			    //    'email_address' => 'newton2@kleenos.com',
+			    //    'status' => 'subscribed',
+			    // ),
+			    // 2 => array(
+			    //    'email_address' => 'newton3@kleenos.com',
+			    //    'status_if_new' => 'subscribed',
+			    // ),
+			  ),
+			   'update_existing' => true,
+		);
+
+		$result = json_decode(connect_to_mailchimp_api($url, 'POST', $api_key, $data));
+		// print_r($result->errors);
+		// print_r($result->new_members);
+		header('Location: lists.php', true, 302);
+		exit;
+	}
+
+	//add_self_email_to_list('dbc0ddcb31');
 
 	function get_all_lists(){
 		global $url, $api_key;
-		$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
-		echo "hello";
-		print_r( $result->errors);
-		echo "1";
-		// print_r($result->lists);
-		echo "Total Items: ". $result->total_items;
-		$lists = $result->lists;
-		print_r($lists[1]->name);
 
-	  	echo json_encode($lists[1]->name);
+		$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
+		// print_r( $result->errors);
+		// print_r($result->lists);
+		// echo json_encode("total_items: ". $result->total_items);
+
+		// $lists = $result->lists;
+
+	  	// echo json_encode("name: ". $lists[0]->name);
+	  	// return $lists[0]->name;
+	  	$total = $result->total_items;
+	  	$lists = array(
+	  		'total' => $total,
+	  		'list_info' => $result->lists
+	  		);
+	  	// print_r($lists);
+	  	return $lists;
 	}
-	get_all_lists();
+
+	// function get_all_list_names(){
+	// 	global $url, $api_key;
+	// 	$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
+
+	// 	//get total list count
+	// 	$total = $result->total_items;
+
+	// 	//get all returned lists
+	// 	$lists = $result->lists;
+
+	// 	$names = array();
+	// 	for($x = 0; $x < $total; $x++){
+	// 		$names[$x] = $lists[$x]->name;
+	// 	}
+
+	// 	return $names;
+	// }
+
+	// get_all_lists();
 	// create_new_list();
 	
 	
