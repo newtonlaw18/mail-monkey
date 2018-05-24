@@ -8,6 +8,17 @@
 		create_new_list($list_name);
 	}
 
+	// if($_POST["list_id"]){
+	// 	echo $_POST["list_id"];
+	// }
+
+	if($_POST["emails"]){
+		echo $_POST["emails"];
+		echo $_POST["list_id"];
+		// $list_name = $_POST["list_name"];
+		// create_new_list($list_name);
+	}
+
 	function connect_to_mailchimp_api( $url, $request_type, $api_key, $data = array() ) {
 		if( $request_type == 'GET' )
 			$url .= '?' . http_build_query($data);

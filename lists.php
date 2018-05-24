@@ -62,9 +62,9 @@
                         <td>'.$lists['list_info'][$i]->date_created.'</td>
                         <input type="hidden" name="list_id" value="'.$lists['list_info'][$i]->id.'">
                         <td>
-                          <button type="button" id="new-list-btn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addEmailToList" data-whatever="@mdo">Add email to list
+                          <button type="button" id="addEmailsToListBtn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addEmailToList" data-listID="'.$lists['list_info'][$i]->id.'">Add email to list
                           </button>
-                          <button type="button" id="new-list-btn" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Delete
+                          <button type="button" id="deleteListBtn" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-listID="'.$lists['list_info'][$i]->id.'">Delete
                           </button>
                         </td>
                       </tr>';
@@ -74,6 +74,7 @@
             </table>
             <br><br>
             <button type="button" id="new-list-btn" class="btn btn-danger" data-toggle="modal" data-target="#createNewList" data-whatever="@mdo">Create New List</button>
+            <a class="btn btn-danger" href="add-subs.php">Add Emails To Existing List</a>
           </div>
         </div>
           
@@ -89,13 +90,10 @@
                   </div>
                   <div class="modal-body">
                     <form>
+                      <p class="text-danger">*Upon successful creation of the list, you'll notice that my personal email has been added to the list automatically. *</p>
                       <div class="form-group">
                         <label for="recipient-name" class="col-form-label">List Name:</label>
                         <input type="text" class="form-control" id="list_name" name="list_name">
-                      </div>
-                      <div class="form-group">
-                        <label for="message-text" class="col-form-label">Message:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
                       </div>
                     </form>
                   </div>
@@ -108,6 +106,7 @@
             </div>
             </form>
 
+            <form action="mailchimp.php" method="post" name="addEmailsToListForm">
             <div class="modal fade" id="addEmailToList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -119,13 +118,10 @@
                   </div>
                   <div class="modal-body">
                     <form>
+                      <p class="text-danger">*To add multiple emails, simply add ';' after each email *</p>
                       <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">List Name:</label>
-                        <input type="text" class="form-control" id="list_name" name="list_name">
-                      </div>
-                      <div class="form-group">
-                        <label for="message-text" class="col-form-label">Message:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
+                        <label for="message-text" class="col-form-label">Emails:</label>
+                        <textarea class="form-control" id="message-text" rows="5" name="emails" placeholder="john@gmail.com;emma@gmail.com"></textarea>
                       </div>
                     </form>
                   </div>
@@ -136,6 +132,7 @@
                 </div>
               </div>
             </div>
+            </form>
       </div>
       
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -145,7 +142,16 @@
 
 
       <script type="text/javascript">
-        
+        $("document").ready(function(){
+          $('#addEmailsToListBtn').click(function(){
+            alert('yes onclick');
+            var list_id = $('#addEmailsToListBtn').attr('data-listID');
+            alert(list_id);
+            
+            $("[name='addEmailsToListForm']").append('<input type="hidden" name="list_id" value="'+list_id+'" />');
+
+          });
+        });
         // var request = new XMLHttpRequest();
         // request.open("POST", "mailchimp.php", true);
         // request.responseType = 'json';
