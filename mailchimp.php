@@ -77,6 +77,7 @@
 		}
 	}
 
+	//set campaign content
 	function set_campaign_content($campaign_id){
 		global $url, $api_key;
 		$campaign_id = $campaign_id;
@@ -92,16 +93,28 @@
 		}
 	}
 
+	//send campaign
 	function send_campaign($campaign_id){
 		global $url, $api_key;
 		$campaign_id = $campaign_id;
 		$url = "https://us18.api.mailchimp.com/3.0/campaigns" . "/" . $campaign_id . "/actions/send";
 		$result = json_decode(connect_to_mailchimp_api($url, 'POST', $api_key, ''));
 		if(!$result->errors){	
-			echo "successfully send";
+			echo '<script language="javascript">';
+			echo 'if(confirm("Campaign Sent Successfully! Check your email or junk mail if you are subscribed to the list.")) {
+    			window.location.href = "lists.php"}';
+			echo '</script>';		
 		}else{
 			print_r($result->errors);
 		}
+	}
+
+	function get_campaigns(){
+		global $url, $api_key;
+		$url = "https://us18.api.mailchimp.com/3.0/campaigns";
+
+		$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
+		return $result;
 	}
 
 	function create_new_list($list_name){

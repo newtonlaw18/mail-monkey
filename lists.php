@@ -1,6 +1,5 @@
 <?php 
   include 'mailchimp.php'
-  // header('Location: '.$_SERVER['PHP_SELF']);  
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,19 +30,17 @@
             <li class="nav-item active">
               <a class="nav-link" href="lists.php">Lists</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="campaigns.html">Campaigns</a>
-            </li>
           </ul>
         </div>
       </nav>
       <br>
       <div class="container">
-        <div class="row text-center">
+        <div class="row">
           <div class="col-md-12">
-            <table class="table table-striped">
+            <h3>All Lists</h3>
+            <table class="table">
               <thead>
-                <tr>
+                <tr class="table-primary">
                   <th scope="col">#</th>
                   <th scope="col">List Name</th>
                   <th scope="col">Date Created</th>
@@ -69,11 +66,51 @@
                     }
                   ?>
               </tbody>
-            </table>
+            </table>        
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <h3>All Campaigns</h3>
+            <table class="table">
+              <thead>
+                <tr class="table-primary">
+                  <th scope="col">#</th>
+                  <th scope="col">Campaign Name</th>
+                  <th scope="col">Date Created</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>       
+                  <?php 
+                    $campaigns = get_campaigns(); 
+                    
+                    for($i = 0; $i<$campaigns->total_items;$i++){
+                      echo '
+                      <tr>
+                        <th scope="row">'.($i+1).'</th>
+                        <td>'.$campaigns->campaigns[$i]->settings->subject_line.'</td>
+                        <td>'.$campaigns->campaigns[$i]->create_time.'</td>
+                        <td>'.
+                            $campaigns->campaigns[$i]->status
+                          .'
+                        </td>
+                      </tr>';
+                    }
+                  ?>
+              </tbody>
+            </table>        
+          </div>
+        </div>
+
+        <div class="row text-center">
+          <div class="col-md-12">
             <br><br>
             <button type="button" id="new-list-btn" class="btn btn-danger" data-toggle="modal" data-target="#createNewList" data-whatever="@mdo">Create New List</button>
             <a class="btn btn-danger" href="add-subs.php">Add Emails To Existing List</a>
             <a class="btn btn-danger" href="new-campaign.php">Create New Campaign</a>
+            <br><br><br><br>
           </div>
         </div>
           
