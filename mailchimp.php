@@ -102,7 +102,7 @@
 		if(!$result->errors){	
 			echo '<script language="javascript">';
 			echo 'if(confirm("Campaign Sent Successfully! Check your email or junk mail if you are subscribed to the list.")) {
-    			window.location.href = "lists.php"}';
+    			window.location.href = "index.php"}';
 			echo '</script>';		
 		}else{
 			print_r($result->errors);
@@ -173,7 +173,7 @@
 		if(!$result->errors){
 			echo '<script language="javascript">';
 			echo 'if(confirm("New Subscribers Added!")) {
-    			window.location.href = "lists.php"}';
+    			window.location.href = "index.php"}';
 			echo '</script>';		
 		}
 	}
@@ -206,7 +206,7 @@
 		$result = json_decode(connect_to_mailchimp_api($url, 'POST', $api_key, $data));
 		// print_r($result->errors);
 		// print_r($result->new_members);
-		header('Location: lists.php', true, 302);
+		header('Location: index.php', true, 302);
 		exit;
 	}
 
