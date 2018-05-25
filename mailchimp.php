@@ -8,15 +8,10 @@
 		create_new_list($list_name);
 	}
 
-	// if($_POST["list_id"]){
-	// 	echo $_POST["list_id"];
-	// }
-
-	if($_POST["emails"]){
-		echo $_POST["emails"];
-		echo $_POST["list_id"];
-		// $list_name = $_POST["list_name"];
-		// create_new_list($list_name);
+	if($_POST["emails"] && $_POST["list_id"]){
+		$emails = $_POST["emails"];
+		$list_id = $_POST["list_id"];
+		add_emails_to_list($list_id, $emails);
 	}
 
 	function connect_to_mailchimp_api( $url, $request_type, $api_key, $data = array() ) {
@@ -69,14 +64,40 @@
 			)
 		);
 		$result = json_decode(connect_to_mailchimp_api($url, 'POST', $api_key, $data));
-		// echo "hello";
 		// print_r( $result->errors);
-		// echo "1";
 		// print($result->id);
-		// echo "2";
 
 		//redirect back to lists page after creating a new list
 		add_self_email_to_list($result->id);
+	}
+
+	function add_emails_to_list($list_id, $emails){
+		global $url, $api_key;
+		$list_id = $list_id;
+		$url = $url . "/" . $list_id;
+		$emails = $emails;
+		$emailList = explode(';', $emails);
+		$result;
+
+		for($i=0;$i<count($emailList);$i++){
+			$data = array(
+				// 'list_id' => $list_id,
+				'members' => array (
+				    0 => array(
+				       'email_address' => $emailList[$i],
+				       'status' => 'subscribed',
+				    )
+				  ),
+				   'update_existing' => true,
+			);
+			$result = json_decode(connect_to_mailchimp_api($url, 'POST', $api_key, $data));
+		}
+		if(!$result->errors){
+			echo '<script language="javascript">';
+			echo 'if(confirm("New Subscribers Added!")) {
+    			window.location.href = "lists.php"}';
+			echo '</script>';		
+		}
 	}
 
 	function add_self_email_to_list($list_id){
@@ -113,49 +134,18 @@
 
 	//add_self_email_to_list('dbc0ddcb31');
 
+	// get all lists from Mailchimp
 	function get_all_lists(){
 		global $url, $api_key;
 
 		$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
-		// print_r( $result->errors);
-		// print_r($result->lists);
-		// echo json_encode("total_items: ". $result->total_items);
-
-		// $lists = $result->lists;
-
-	  	// echo json_encode("name: ". $lists[0]->name);
-	  	// return $lists[0]->name;
 	  	$total = $result->total_items;
 	  	$lists = array(
 	  		'total' => $total,
 	  		'list_info' => $result->lists
 	  		);
-	  	// print_r($lists);
 	  	return $lists;
 	}
-
-	// function get_all_list_names(){
-	// 	global $url, $api_key;
-	// 	$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
-
-	// 	//get total list count
-	// 	$total = $result->total_items;
-
-	// 	//get all returned lists
-	// 	$lists = $result->lists;
-
-	// 	$names = array();
-	// 	for($x = 0; $x < $total; $x++){
-	// 		$names[$x] = $lists[$x]->name;
-	// 	}
-
-	// 	return $names;
-	// }
-
-	// get_all_lists();
-	// create_new_list();
-	
-	
 	 
 	if( !empty($result->lists) ) {
 		echo '<select>';

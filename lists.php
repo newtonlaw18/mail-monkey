@@ -1,4 +1,7 @@
-<?php include 'mailchimp.php' ?>
+<?php 
+  include 'mailchimp.php'
+  // header('Location: '.$_SERVER['PHP_SELF']);  
+?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -26,13 +29,10 @@
               <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="lists.html">Lists</a>
+              <a class="nav-link" href="lists.php">Lists</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="campaigns.html">Campaigns</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="reports.html">Reports</a>
             </li>
           </ul>
         </div>
@@ -47,7 +47,7 @@
                   <th scope="col">#</th>
                   <th scope="col">List Name</th>
                   <th scope="col">Date Created</th>
-                  <th scope="col">Action</th>
+                  <th scope="col">No. of Subscriber</th>
                 </tr>
               </thead>
               <tbody>       
@@ -61,11 +61,9 @@
                         <td>'.$lists['list_info'][$i]->name.'</td>
                         <td>'.$lists['list_info'][$i]->date_created.'</td>
                         <input type="hidden" name="list_id" value="'.$lists['list_info'][$i]->id.'">
-                        <td>
-                          <button type="button" id="addEmailsToListBtn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addEmailToList" data-listID="'.$lists['list_info'][$i]->id.'">Add email to list
-                          </button>
-                          <button type="button" id="deleteListBtn" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-listID="'.$lists['list_info'][$i]->id.'">Delete
-                          </button>
+                        <td>'.
+                            $lists['list_info'][$i]->stats->member_count
+                          .'
                         </td>
                       </tr>';
                     }
@@ -75,6 +73,7 @@
             <br><br>
             <button type="button" id="new-list-btn" class="btn btn-danger" data-toggle="modal" data-target="#createNewList" data-whatever="@mdo">Create New List</button>
             <a class="btn btn-danger" href="add-subs.php">Add Emails To Existing List</a>
+            <a class="btn btn-danger" href="new-campaign.php">Create New Campaign</a>
           </div>
         </div>
           
@@ -106,33 +105,6 @@
             </div>
             </form>
 
-            <form action="mailchimp.php" method="post" name="addEmailsToListForm">
-            <div class="modal fade" id="addEmailToList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Email to List</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form>
-                      <p class="text-danger">*To add multiple emails, simply add ';' after each email *</p>
-                      <div class="form-group">
-                        <label for="message-text" class="col-form-label">Emails:</label>
-                        <textarea class="form-control" id="message-text" rows="5" name="emails" placeholder="john@gmail.com;emma@gmail.com"></textarea>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <input type="submit" name="submit" class="btn btn-primary">
-                  </div>
-                </div>
-              </div>
-            </div>
-            </form>
       </div>
       
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -143,25 +115,8 @@
 
       <script type="text/javascript">
         $("document").ready(function(){
-          $('#addEmailsToListBtn').click(function(){
-            alert('yes onclick');
-            var list_id = $('#addEmailsToListBtn').attr('data-listID');
-            alert(list_id);
-            
-            $("[name='addEmailsToListForm']").append('<input type="hidden" name="list_id" value="'+list_id+'" />');
-
-          });
+          
         });
-        // var request = new XMLHttpRequest();
-        // request.open("POST", "mailchimp.php", true);
-        // request.responseType = 'json';
-        // request.onload  = function() {
-        //    var jsonResponse = request.response;
-        //    // alert('hell');
-        //   };
-        // request.send();
-        // console.log(request.status);
-        // console.log(request.statusText);
       </script>
     </body>
 </html>

@@ -1,3 +1,4 @@
+<?php include 'mailchimp.php' ?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -20,8 +21,8 @@
 
         <div class="collapse navbar-collapse" id="navbarColor02">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="lists.html">Lists</a>
@@ -29,7 +30,7 @@
             <li class="nav-item">
               <a class="nav-link" href="campaigns.html">Campaigns</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="reports.html">Reports</a>
             </li>
           </ul>
@@ -37,9 +38,43 @@
       </nav>
 
       <div class="container">
-          <h1>Results</h1>
-
-
+          <div class="row">
+            <div class="col-md-12">
+              <h2>Add Emails To List</h2>
+              <form action="mailchimp.php" method="post" name="addEmailsToListForm">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label">List</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" name="list_id">
+                    <?php 
+                      $lists = get_all_lists(); 
+                      for($i = 0; $i<$lists['total'];$i++){
+                        echo '
+                            <option value="'.$lists['list_info'][$i]->id.'">'.$lists['list_info'][$i]->name.'</option>
+                        ';
+                      }
+                    ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-sm-2 col-form-label">Emails</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" id="message-text" rows="5" name="emails" placeholder="john@gmail.com;emma@gmail.com" required></textarea>
+                    <small id="passwordHelpBlock" class="form-text text-muted">
+                      *To add multiple emails, simply add ';' after each email *
+                    </small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 text-center">
+                    <input type="submit" name="submit" class="btn btn-primary">
+                  </div>
+                </div>
+                
+              </form>
+            </div>
+          </div>
       </div>
       
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
