@@ -1,4 +1,4 @@
-<?php include 'mailchimp.php' ?>
+<?php include 'mailchimp.php'; ?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -14,7 +14,7 @@
     </head>
     <body>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="index.html">MailMonkey</a>
+        <a class="navbar-brand" href="index.php">MailMonkey</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

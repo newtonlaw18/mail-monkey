@@ -1,5 +1,5 @@
 <?php 
-  include 'mailchimp.php'
+  include 'mailchimp.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -17,7 +17,7 @@
     </head>
     <body>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="index.html">MailMonkey</a>
+        <a class="navbar-brand" href="index.php">MailMonkey</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -53,7 +53,7 @@
                       <tr>
                         <th scope="row">'.($i+1).'</th>
                         <td>'.$lists['list_info'][$i]->name.'</td>
-                        <td>'.$lists['list_info'][$i]->date_created.'</td>
+                        <td>'.date("d/m/Y H:i:s", strtotime($lists['list_info'][$i]->date_created)).'</td>
                         <input type="hidden" name="list_id" value="'.$lists['list_info'][$i]->id.'">
                         <td>'.
                             $lists['list_info'][$i]->stats->member_count
@@ -88,7 +88,7 @@
                       <tr>
                         <th scope="row">'.($i+1).'</th>
                         <td>'.$campaigns->campaigns[$i]->settings->subject_line.'</td>
-                        <td>'.$campaigns->campaigns[$i]->create_time.'</td>
+                        <td>'.date("d/m/Y H:i:s", strtotime($campaigns->campaigns[$i]->create_time)).'</td>
                         <td>'.
                             $campaigns->campaigns[$i]->status
                           .'
