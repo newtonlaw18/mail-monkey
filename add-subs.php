@@ -32,6 +32,7 @@
           <div class="row">
             <div class="col-md-12">
               <h2>Add Emails To List</h2>
+                <p>Add bunch of emails to the mailchimp list</p>
               <form action="mailchimp.php" method="post" name="addEmailsToListForm">
                 <div class="form-group row">
                   <label for="staticEmail" class="col-sm-2 col-form-label">List</label>
