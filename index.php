@@ -13,7 +13,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="js/lists.js"></script>
 
-        <title>MailChimp API Test</title>
+        <title>Mail Monkey (MailChimp) Test Program</title>
     </head>
     <body>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
