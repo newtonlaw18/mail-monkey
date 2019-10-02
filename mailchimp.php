@@ -3,7 +3,6 @@
 	$url = 'https://us18.api.mailchimp.com/3.0/lists';
 
 	if($_POST["list_name"]){
-		echo $_POST["list_name"];
 		$list_name = $_POST["list_name"];
 		create_new_list($list_name);
 	}
