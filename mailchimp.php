@@ -108,14 +108,6 @@
 		}
 	}
 
-	function get_campaigns(){
-		global $url, $api_key;
-		$url = "https://us18.api.mailchimp.com/3.0/campaigns";
-
-		$result = json_decode(connect_to_mailchimp_api($url, 'GET', $api_key, ''));
-		return $result;
-	}
-
 	function create_new_list($list_name){
 		global $url, $api_key;
 		$list_name = $list_name;
